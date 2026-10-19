@@ -5,12 +5,12 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
-// Replit sets PORT/BASE_PATH via artifact.toml; CI/Render builds use these defaults.
-const port = Number(process.env.PORT ?? "24144");
+// Replit sets PORT/BASE_PATH via artifact.toml; CI/Coolify builds use these defaults.
 const basePath = process.env.BASE_PATH ?? "/";
-
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${process.env.PORT}"`);
+const portRaw = process.env.PORT;
+const port = Number(portRaw ?? "24144");
+if (portRaw !== undefined && portRaw !== "" && (Number.isNaN(port) || port <= 0)) {
+  throw new Error(`Invalid PORT value: "${portRaw}"`);
 }
 
 const isReplit = process.env.REPL_ID !== undefined;

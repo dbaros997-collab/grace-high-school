@@ -1,20 +1,18 @@
 # Coolify / Nixpacks — native pnpm monorepo build.
 # package.json "packageManager" selects pnpm 11; pnpm-workspace.yaml defines the workspace.
-# Nixpacks' default pnpm (9.x) cannot read pnpm 11 lockfile overrides — activate corepack first.
 # Do NOT set NODE_ENV=production globally: pnpm skips devDependencies (Vite/esbuild) needed to build.
+# Do NOT use corepack / npm install -g pnpm here — ERR_UNKNOWN_BUILTIN_MODULE on some Node 20.20.x hosts.
 
 providers = ["node"]
 
+[phases.setup]
+nixPkgs = ["curl"]
+
 [phases.install]
-cmds = [
-  "npm install -g corepack@latest",
-  "corepack enable",
-  "corepack prepare pnpm@11.10.0 --activate",
-  "pnpm install --frozen-lockfile --prod=false",
-]
+cmds = ["sh ./scripts/bootstrap-pnpm-ci.sh"]
 
 [phases.build]
-cmds = ["pnpm run build:docker"]
+cmds = ["npm run build:docker"]
 
 [start]
 cmd = "NODE_ENV=production node ./scripts/src/docker-start.mjs"
