@@ -1,18 +1,20 @@
-# Coolify v4 / Nixpacks — pnpm monorepo (Vite + API server, not Next.js).
-# ERR_UNKNOWN_BUILTIN_MODULE: do NOT use corepack or default Nixpacks pnpm — use bootstrap-pnpm-ci.sh.
-# Do NOT set NODE_ENV=production globally: pnpm skips devDependencies (Vite/esbuild) needed to build.
-# Coolify: leave Install/Build/Start commands empty so this file is used.
+# Coolify v4 / Nixpacks — avoid default `npm i -g corepack` (EBADENGINE on some Node 20 images).
+# Setup: Node 20 + pnpm from nixpkgs only. Install: plain pnpm (no corepack, no frozen lockfile).
+# Do NOT set NODE_ENV=production globally — pnpm would skip devDependencies (Vite/esbuild).
+# Coolify: clear custom Install/Build/Start commands so this file is used.
 
 providers = ["node"]
 
 [variables]
 NIXPACKS_NODE_VERSION = "20"
+NPM_CONFIG_PRODUCTION = "false"
 
 [phases.setup]
-nixPkgs = ["curl"]
+nixPkgs = ["nodejs_20", "pnpm"]
+cmds = ["node --version", "pnpm --version"]
 
 [phases.install]
-cmds = ["sh ./scripts/bootstrap-pnpm-ci.sh"]
+cmds = ["pnpm install --no-frozen-lockfile"]
 
 [phases.build]
 cmds = ["npm run build:docker"]
