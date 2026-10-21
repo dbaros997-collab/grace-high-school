@@ -19,7 +19,7 @@
   "private": true,
   "packageManager": "pnpm@11.10.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=20.0.0"
   },
   "devDependencies": {
     "prettier": "^3.8.3",

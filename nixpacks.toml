@@ -1,9 +1,12 @@
-# Coolify / Nixpacks — native pnpm monorepo build.
-# package.json "packageManager" selects pnpm 11; pnpm-workspace.yaml defines the workspace.
+# Coolify v4 / Nixpacks — pnpm monorepo (Vite + API server, not Next.js).
+# ERR_UNKNOWN_BUILTIN_MODULE: do NOT use corepack or default Nixpacks pnpm — use bootstrap-pnpm-ci.sh.
 # Do NOT set NODE_ENV=production globally: pnpm skips devDependencies (Vite/esbuild) needed to build.
-# Do NOT use corepack / npm install -g pnpm here — ERR_UNKNOWN_BUILTIN_MODULE on some Node 20.20.x hosts.
+# Coolify: leave Install/Build/Start commands empty so this file is used.
 
 providers = ["node"]
+
+[variables]
+NIXPACKS_NODE_VERSION = "20"
 
 [phases.setup]
 nixPkgs = ["curl"]

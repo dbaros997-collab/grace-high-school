@@ -3,6 +3,7 @@
 set -e
 
 PNPM_ROOT="${PNPM_ROOT:-/opt/pnpm-cli}"
+# Must match package.json "packageManager" (pnpm@11.10.0).
 PNPM_VERSION="${PNPM_VERSION:-11.10.0}"
 
 if [ ! -f "$PNPM_ROOT/bin/pnpm.cjs" ]; then
