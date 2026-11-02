@@ -40,6 +40,16 @@ function apiErrorMessage(err: ApiError): string | undefined {
 export function toFriendlyError(err: unknown): FriendlyError {
   const status = err instanceof ApiError ? err.status : undefined;
 
+  if (status === 503 && err instanceof ApiError) {
+    const serverMessage = apiErrorMessage(err);
+    return {
+      title: "Database not connected",
+      description:
+        serverMessage ??
+        "The server cannot reach PostgreSQL. In Coolify, link a Postgres database, set DATABASE_URL on the app, and redeploy.",
+    };
+  }
+
   if (status === 401 || status === 403) {
     const serverMessage =
       err instanceof ApiError ? apiErrorMessage(err) : undefined;

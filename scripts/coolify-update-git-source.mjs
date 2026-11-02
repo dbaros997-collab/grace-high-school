@@ -9,7 +9,7 @@
  *
  * Optional env:
  *   COOLIFY_APP_NAME=grace-high-school   (default)
- *   COOLIFY_GIT_REPO=https://github.com/dbaros997-collab/grace-high-school.git
+ *   COOLIFY_GIT_REPO=https://github.com/dbaros997-collab/website-greener-2.git
  *   COOLIFY_GIT_BRANCH=main
  *   COOLIFY_DEPLOY=1                      (trigger deploy after PATCH)
  *   COOLIFY_FORCE_DEPLOY=1                (force rebuild, with COOLIFY_DEPLOY)
@@ -25,7 +25,7 @@ const COOLIFY_TOKEN = process.env.COOLIFY_TOKEN?.trim();
 const APP_NAME = process.env.COOLIFY_APP_NAME ?? "grace-high-school";
 const GIT_REPO =
   process.env.COOLIFY_GIT_REPO ??
-  "https://github.com/dbaros997-collab/grace-high-school.git";
+  "https://github.com/dbaros997-collab/website-greener-2.git";
 const GIT_BRANCH = process.env.COOLIFY_GIT_BRANCH ?? "main";
 const SHOULD_DEPLOY = process.env.COOLIFY_DEPLOY === "1";
 const FORCE_DEPLOY = process.env.COOLIFY_FORCE_DEPLOY === "1";

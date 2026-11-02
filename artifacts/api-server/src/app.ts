@@ -3,6 +3,10 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import { logger } from "./lib/logger";
 import { registerStaticSites } from "./lib/staticSites";
+import {
+  DATABASE_UNAVAILABLE_MESSAGE,
+  isPostgresConnectionError,
+} from "./lib/pg-errors";
 
 const isLocalDev =
   process.env.NODE_ENV !== "production" && process.env.REPL_ID === undefined;
@@ -66,6 +70,10 @@ function errorHandler(
     return;
   }
   logger.error({ err }, "Unhandled request error");
+  if (isPostgresConnectionError(err)) {
+    res.status(503).json({ error: DATABASE_UNAVAILABLE_MESSAGE });
+    return;
+  }
   res.status(500).json({ error: "Internal server error" });
 }
 
@@ -138,6 +146,24 @@ export async function mountApiRoutes(app: Express): Promise<void> {
     import("./lib/session"),
     import("./routes"),
   ]);
+
+  const { isDatabaseReachable } = await import("./lib/dbHealth");
+
+  app.use("/api", async (req, res, next) => {
+    if (
+      req.path === "/healthz" ||
+      req.path === "/readyz" ||
+      req.path.startsWith("/storage/objects/")
+    ) {
+      next();
+      return;
+    }
+    if (await isDatabaseReachable()) {
+      next();
+      return;
+    }
+    res.status(503).json({ error: DATABASE_UNAVAILABLE_MESSAGE });
+  });
 
   app.use("/api", sessionMiddleware);
   app.use("/api", router);

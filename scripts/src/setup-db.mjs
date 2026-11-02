@@ -1,4 +1,5 @@
 import pg from "pg";
+import { postgresPoolSsl } from "../lib/postgres-ssl.mjs";
 
 // Never hard-fail the process: Render start commands often chain this with
 // `&& node …`, and a DB blip must not prevent the HTTP server from binding.
@@ -8,15 +9,10 @@ if (!connectionString) {
   process.exit(0);
 }
 
-const useSsl =
-  process.env.PGSSL === "true" ||
-  /render\.com/i.test(connectionString) ||
-  /[?&]sslmode=require/i.test(connectionString);
-
 const pool = new pg.Pool({
   connectionString,
   connectionTimeoutMillis: 8_000,
-  ssl: useSsl ? { rejectUnauthorized: false } : undefined,
+  ssl: postgresPoolSsl(connectionString),
 });
 
 const schemaSql = `

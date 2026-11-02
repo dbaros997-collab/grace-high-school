@@ -16,6 +16,10 @@ import {
   verifyResetSecret,
   ensurePasswordlessSession,
 } from "../lib/auth";
+import {
+  DATABASE_UNAVAILABLE_MESSAGE,
+  isPostgresConnectionError,
+} from "../lib/pg-errors";
 
 const router: IRouter = Router();
 
@@ -32,6 +36,10 @@ router.post("/auth/setup", async (req, res): Promise<void> => {
     res.json(SetupAdminResponse.parse(user));
   } catch (err) {
     req.log.error({ err }, "Passwordless setup failed");
+    if (isPostgresConnectionError(err)) {
+      res.status(503).json({ error: DATABASE_UNAVAILABLE_MESSAGE });
+      return;
+    }
     res.status(500).json({ error: "Failed to open admin session." });
   }
 });
@@ -43,6 +51,10 @@ router.post("/auth/login", async (req, res): Promise<void> => {
     res.json(LoginResponse.parse(user));
   } catch (err) {
     req.log.error({ err }, "Passwordless login failed");
+    if (isPostgresConnectionError(err)) {
+      res.status(503).json({ error: DATABASE_UNAVAILABLE_MESSAGE });
+      return;
+    }
     res.status(500).json({ error: "Failed to open admin session." });
   }
 });

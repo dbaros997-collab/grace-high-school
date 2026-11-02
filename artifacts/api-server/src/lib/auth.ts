@@ -7,6 +7,10 @@ import {
 import { promisify } from "node:util";
 import type { Request, Response, NextFunction } from "express";
 import { db, staffUsersTable } from "@workspace/db";
+import {
+  DATABASE_UNAVAILABLE_MESSAGE,
+  isPostgresConnectionError,
+} from "./pg-errors";
 
 const scrypt = promisify(scryptCb);
 const KEYLEN = 64;
@@ -90,6 +94,10 @@ export function requireAuth(
       await ensurePasswordlessSession(req);
       next();
     } catch (err) {
+      if (isPostgresConnectionError(err)) {
+        res.status(503).json({ error: DATABASE_UNAVAILABLE_MESSAGE });
+        return;
+      }
       next(err);
     }
   })();

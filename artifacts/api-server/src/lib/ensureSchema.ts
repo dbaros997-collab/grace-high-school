@@ -178,10 +178,17 @@ CREATE TABLE IF NOT EXISTS "stored_objects" (
 
 /** Create tables if missing. Safe to call on every boot; never throws to callers. */
 export async function ensureSchema(): Promise<void> {
-  try {
-    await pool.query(schemaSql);
-    logger.info("Database schema is ready");
-  } catch (err) {
-    logger.error({ err }, "Failed to ensure database schema");
+  const delays = [0, 2_000, 5_000];
+  for (let i = 0; i < delays.length; i++) {
+    if (delays[i]! > 0) {
+      await new Promise((r) => setTimeout(r, delays[i]));
+    }
+    try {
+      await pool.query(schemaSql);
+      logger.info("Database schema is ready");
+      return;
+    } catch (err) {
+      logger.error({ err, attempt: i + 1 }, "Failed to ensure database schema");
+    }
   }
 }
