@@ -132,9 +132,10 @@ async function main() {
     headers: authHeaders(),
   });
   console.log("[coolify] Deploy queued:", JSON.stringify(deploy, null, 2));
-  console.log(
-    "[coolify] After deploy, verify: https://gracehighschoolgayaza.academy/api/readyz",
-  );
+  console.log("[coolify] After deploy:");
+  console.log("  DB:         https://gracehighschoolgayaza.academy/api/readyz");
+  console.log("  Dashboard:  https://gracehighschoolgayaza.academy/dashboard/");
+  console.log("  Public site https://gracehighschoolgayaza.academy/");
 }
 
 main().catch((err) => {

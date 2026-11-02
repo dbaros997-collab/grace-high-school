@@ -22,9 +22,9 @@ const secret =
 
 if (!secretFromEnv) {
   // Don't crash the whole deploy — API must still mount. Sessions won't survive
-  // restarts until SESSION_SECRET is set stably in the Render Environment tab.
+  // restarts until SESSION_SECRET is set stably in the server environment.
   logger.warn(
-    "SESSION_SECRET is missing; using an ephemeral secret for this boot. Set SESSION_SECRET in Render so logins survive redeploys.",
+    "SESSION_SECRET is missing; using an ephemeral secret for this boot. Set SESSION_SECRET in Coolify so logins survive redeploys.",
   );
 }
 

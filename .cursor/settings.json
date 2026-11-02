@@ -1,7 +1,7 @@
 {
   "plugins": {
     "render": {
-      "enabled": true
+      "enabled": false
     }
   }
 }

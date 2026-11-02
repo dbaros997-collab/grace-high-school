@@ -106,7 +106,7 @@ function mountSpa(app: Express, mount: string, publicDir: string): void {
   app.get(`${mount}/*path`, spaFallback(publicDir));
 }
 
-/** Serve Vite build output for the public site and admin dashboards (Render / single-service deploys). */
+/** Serve Vite build output for the public site + staff dashboard (single Coolify service). */
 export function registerStaticSites(app: Express): void {
   const homeDir = path.join(artifactsRoot, "grace-high-school", "dist/public");
   // Register before static/SPA middleware so Search Console gets 200 + raw body (no redirect).

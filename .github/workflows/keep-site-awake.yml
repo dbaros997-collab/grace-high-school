@@ -1,0 +1,34 @@
+# Ping the live Coolify-hosted site so long-idle instances stay warm (optional).
+name: Keep site awake
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: keep-site-awake
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping health endpoint
+        env:
+          SITE_URL: ${{ vars.SITE_KEEPALIVE_URL }}
+        run: |
+          set -euo pipefail
+          base="${SITE_URL:-https://gracehighschoolgayaza.academy}"
+          url="${base%/}/api/healthz"
+          echo "Pinging $url"
+          for i in 1 2 3; do
+            if curl -fsS --max-time 90 "$url"; then
+              echo
+              echo "OK (attempt $i)"
+              exit 0
+            fi
+            sleep 15
+          done
+          exit 1

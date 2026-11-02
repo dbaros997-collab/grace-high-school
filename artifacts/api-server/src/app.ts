@@ -25,15 +25,6 @@ function collectAllowedOrigins(): Set<string> {
     if (trimmed) origins.add(trimmed.replace(/\/$/, ""));
   }
 
-  const renderUrl = process.env.RENDER_EXTERNAL_URL?.trim();
-  if (renderUrl) {
-    try {
-      origins.add(new URL(renderUrl).origin);
-    } catch {
-      // ignore malformed RENDER_EXTERNAL_URL
-    }
-  }
-
   return origins;
 }
 
@@ -45,7 +36,6 @@ function isAllowedOrigin(origin: string): boolean {
 
   try {
     const { hostname } = new URL(origin);
-    if (hostname.endsWith(".onrender.com")) return true;
     if (
       hostname === "gracehighschoolgayaza.academy" ||
       hostname === "www.gracehighschoolgayaza.academy"
