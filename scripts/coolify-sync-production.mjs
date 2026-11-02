@@ -108,7 +108,7 @@ async function main() {
       build_command: "",
       start_command: "",
       health_check_enabled: true,
-      health_check_path: "/healthz",
+      health_check_path: "/api/readyz",
     }),
   });
   console.log("[coolify] Git source →", GIT_REPO);

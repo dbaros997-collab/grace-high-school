@@ -100,6 +100,13 @@ export function createBaseApp(): Express {
     res.json(healthPayload);
   });
 
+  const readyz = async (_req: Request, res: Response): Promise<void> => {
+    const { sendReadyzResponse } = await import("./lib/readyz");
+    await sendReadyzResponse(res);
+  };
+  app.get("/readyz", readyz);
+  app.get("/api/readyz", readyz);
+
   // Serve public HTML/icons/sitemap before CORS so Googlebot and Cloudflare
   // can cache SEO assets without Vary: Origin / credential headers.
   registerStaticSites(app);
