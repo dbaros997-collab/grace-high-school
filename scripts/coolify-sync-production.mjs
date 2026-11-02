@@ -125,6 +125,10 @@ async function main() {
   await upsertEnv(uuid, "ALLOWED_ORIGINS", ALLOWED_ORIGINS);
   await upsertEnv(uuid, "NODE_ENV", "production");
   await upsertEnv(uuid, "PGSSL", "false");
+  // Ensure no Render API / DB URLs remain in the runtime env.
+  for (const key of ["VITE_API_BASE_URL", "RENDER_EXTERNAL_URL"]) {
+    await upsertEnv(uuid, key, "");
+  }
 
   const q = new URLSearchParams({ uuid, force: "true" });
   const deploy = await api(`/deploy?${q}`, {

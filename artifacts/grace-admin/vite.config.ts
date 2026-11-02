@@ -28,8 +28,12 @@ function rewriteSetCookieForLocalDev(header: string | string[] | undefined): str
   );
 }
 
-export default defineConfig({
+export default defineConfig(async ({ mode }) => ({
   base: basePath,
+  envDir: path.resolve(import.meta.dirname),
+  ...(mode === "production"
+    ? { env: { VITE_API_BASE_URL: "" } as Record<string, string> }
+    : {}),
   plugins: [
     react(),
     tailwindcss(),
@@ -103,4 +107,4 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true,
   },
-});
+}));

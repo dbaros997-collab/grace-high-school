@@ -30,8 +30,12 @@ function copyRootVerificationFiles(): void {
   }
 }
 
-export default defineConfig({
+export default defineConfig(async ({ mode }) => ({
   base: basePath,
+  envDir: artifactDir,
+  ...(mode === "production"
+    ? { env: { VITE_API_BASE_URL: "" } as Record<string, string> }
+    : {}),
   publicDir,
   plugins: [
     react(),
@@ -100,4 +104,4 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true,
   },
-});
+}));

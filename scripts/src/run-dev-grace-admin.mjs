@@ -24,10 +24,23 @@ function readEnvFileValue(key) {
 // Live site (custom domain) — public pages + /api + /dashboard.
 const LIVE_API = "https://gracehighschoolgayaza.academy";
 
-const apiProxyTarget =
-  process.env.API_PROXY_TARGET ??
-  readEnvFileValue("API_PROXY_TARGET") ??
-  LIVE_API;
+function normalizeProxyTarget(raw) {
+  const value = (raw ?? "").trim();
+  if (!value) return LIVE_API;
+  if (/onrender\.com/i.test(value)) {
+    console.warn(
+      "[grace-admin] API_PROXY_TARGET pointed at Render; using",
+      LIVE_API,
+      "instead.",
+    );
+    return LIVE_API;
+  }
+  return value;
+}
+
+const apiProxyTarget = normalizeProxyTarget(
+  process.env.API_PROXY_TARGET ?? readEnvFileValue("API_PROXY_TARGET"),
+);
 
 const env = {
   ...process.env,

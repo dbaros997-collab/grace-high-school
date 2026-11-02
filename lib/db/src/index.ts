@@ -13,6 +13,12 @@ if (!process.env.DATABASE_URL) {
 
 const connectionString = process.env.DATABASE_URL;
 
+if (/render\.com/i.test(connectionString)) {
+  console.error(
+    "[db] DATABASE_URL points at Render. Use Coolify PostgreSQL internal URL instead.",
+  );
+}
+
 export const pool = new Pool({
   connectionString,
   connectionTimeoutMillis: 10_000,
